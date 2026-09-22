@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expected Shipments TV Dashboard</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #a855f7;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      background: #020617;
+      border-bottom: 2px solid var(--card-border);
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .brand-text .status-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--accent-green);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-green);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .clock-container {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .clock-time {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent-blue);
+      line-height: 1;
+    }
+
+    .clock-date {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    /* METRICS STRIP */
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 24px 32px 12px 32px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 20px 24px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .metric-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .metric-num {
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-top: 4px;
+    }
+
+    .metric-icon {
+      font-size: 32px;
+      opacity: 0.8;
+    }
+
+    /* FILTERS & SEARCH BAR */
+    .controls-bar {
+      padding: 12px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .filter-tabs {
+      display: flex;
+      background: #1e293b;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+    }
+
+    .tab-btn {
+      padding: 8px 18px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #0284c7;
+      color: white;
+    }
+
+    .tv-mode-badge {
+      display: none;
+      background: #334155;
+      color: #38bdf8;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* MAIN CONTAINER / TABLE */
+    main {
+      flex: 1;
+      padding: 12px 32px 32px 32px;
+    }
+
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    thead {
+      background: #0f172a;
+      border-bottom: 2px solid var(--card-border);
+    }
+
+    th {
+      padding: 18px 24px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #334155;
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    td {
+      padding: 20px 24px;
+      font-size: 16px;
+      vertical-align: middle;
+    }
+
+    /* TABLE ELEMENTS */
+    .vendor-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .vendor-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .carrier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .carrier-ups { color: #f59e0b; border-color: #f59e0b40; }
+    .carrier-fedex { color: #a855f7; border-color: #a855f740; }
+    .carrier-dhl { color: #ef4444; border-color: #ef444440; }
+    .carrier-usps { color: #38bdf8; border-color: #38bdf840; }
+    .carrier-freight { color: #22c55e; border-color: #22c55e40; }
+
+    .date-box {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .date-main {
+      font-size: 19px;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+
+    .date-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .pill-today {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid #22c55e60;
+    }
+
+    .pill-tomorrow {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid #38bdf860;
+    }
+
+    .pill-overdue {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid #ef444460;
+      animation: pulse-border 2s infinite;
+    }
+
+    .pill-upcoming {
+      background: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      border: 1px solid #64748b60;
+    }
+
+    .pill-arrived {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid #a855f760;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .icon-btn:hover {
+      background: #334155;
+      color: white;
+    }
+
+    .icon-btn.check:hover {
+      background: var(--accent-green);
+      border-color: var(--accent-green);
+      color: white;
+    }
+
+    .icon-btn.delete:hover {
+      background: var(--accent-red);
+      border-color: var(--accent-red);
+      color: white;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      width: 100%;
+      max-width: 560px;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    /* TV FULLSCREEN MODE STYLES */
+    body.tv-mode .action-btns,
+    body.tv-mode .row-actions,
+    body.tv-mode .filter-tabs {
+      display: none !important;
+    }
+
+    body.tv-mode .tv-mode-badge {
+      display: inline-flex;
+    }
+
+    body.tv-mode td {
+      padding: 24px 28px;
+    }
+
+    body.tv-mode .vendor-name {
+      font-size: 24px;
+    }
+
+    body.tv-mode .date-main {
+      font-size: 22px;
+    }
+
+    body.tv-mode .status-pill {
+      padding: 10px 20px;
+      font-size: 15px;
+    }
+
+    .empty-state {
+      padding: 60px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">
+        <i class="fa-solid fa-truck-fast"></i>
+      </div>
+      <div class="brand-text">
+        <h1>Expected Shipments</h1>
+        <div class="status-tag">
+          <span class="pulse-dot"></span> LIVE DISPLAY BOARD
+        </div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="tv-mode-badge">
+        <i class="fa-solid fa-tv"></i> TV DISPLAY MODE (PRESS ESC TO EXIT)
+      </div>
+
+      <div class="clock-container">
+        <div class="clock-time" id="clockTime">12:00:00 PM</div>
+        <div class="clock-date" id="clockDate">MONDAY, OCT 24</div>
+      </div>
+
+      <div class="action-btns">
+        <button class="btn btn-primary" onclick="openModal()">
+          <i class="fa-solid fa-plus"></i> Add Shipment
+        </button>
+        <button class="btn btn-secondary" onclick="toggleTVMode()" title="Toggle Fullscreen TV View">
+          <i class="fa-solid fa-expand"></i> TV Mode
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- METRICS STRIP -->
+  <section class="metrics-bar">
+    <div class="metric-card">
+      <div>
+        <div class="metric-title">Arriving Today</div>
+        <div class="metric-num" id="countToday" style="color: var(--accent-green);">0</div>
+      </div>
+      <i class="fa-solid fa-calendar-day metric-icon" style="color: var(--accent-green);"></i>
+    </div>
+
+    <div class="metric-card">
+      <div>
+        <div class="metric-title">Overdue / Delayed</div>
+        <div class="metric-num" id="countOverdue" style="color: var(--accent-red);">0</div>
+      </div>
+      <i class="fa-solid fa-triangle-exclamation metric-icon" style="color: var(--accent-red);"></i>
+    </div>
+
+    <div class="metric-card">
+      <div>
+        <div class="metric-title">Upcoming</div>
+        <div class="metric-num" id="countUpcoming" style="color: var(--accent-blue);">0</div>
+      </div>
+      <i class="fa-solid fa-boxes-packing metric-icon" style="color: var(--accent-blue);"></i>
+    </div>
+
+    <div class="metric-card">
+      <div>
+        <div class="metric-title">Total Active</div>
+        <div class="metric-num" id="countTotal" style="color: var(--text-main);">0</div>
+      </div>
+      <i class="fa-solid fa-clipboard-list metric-icon" style="color: var(--text-muted);"></i>
+    </div>
+  </section>
+
+  <!-- FILTERS -->
+  <div class="controls-bar">
+    <div class="filter-tabs">
+      <button class="tab-btn active" onclick="setFilter('active', this)">All Active</button>
+      <button class="tab-btn" onclick="setFilter('today', this)">Today</button>
+      <button class="tab-btn" onclick="setFilter('overdue', this)">Overdue</button>
+      <button class="tab-btn" onclick="setFilter('arrived', this)">Arrived History</button>
+    </div>
+
+    <div style="font-size: 13px; color: var(--text-muted);">
+      Auto-updates real-time • Stored on device
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <main>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Vendor / Supplier</th>
+            <th>Carrier</th>
+            <th>Expected Date</th>
+            <th>Arrival Status</th>
+            <th class="row-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="shipmentsTable">
+          <!-- Rows inserted via Javascript -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- ADD / EDIT MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Add Expected Shipment</div>
+        <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="closeModal()"></i>
+      </div>
+
+      <form id="shipmentForm" onsubmit="saveShipment(event)">
+        <input type="hidden" id="shipmentId">
+
+        <div class="form-group">
+          <label for="vendorInput">Vendor / Supplier Name</label>
+          <input type="text" id="vendorInput" class="form-control" placeholder="e.g. Acme Industrial Supply" required>
+        </div>
+
+        <div class="form-group">
+          <label for="detailsInput">PO / Notes (Optional)</label>
+          <input type="text" id="detailsInput" class="form-control" placeholder="e.g. PO #8834 - 2 Pallets Hardware">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="carrierInput">Carrier</label>
+            <select id="carrierInput" class="form-control" required>
+              <option value="UPS">UPS</option>
+              <option value="FedEx">FedEx</option>
+              <option value="DHL">DHL Express</option>
+              <option value="USPS">USPS</option>
+              <option value="Freight">Freight / LTL</option>
+              <option value="Other">Other / Vendor Delivery</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="dateInput">Expected Date</label>
+            <input type="date" id="dateInput" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="statusInput">Status Override</label>
+          <select id="statusInput" class="form-control">
+            <option value="AUTO">Auto-detect based on Date</option>
+            <option value="ARRIVED">Mark as Arrived</option>
+            <option value="DELAYED">Delayed / Exception</option>
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Shipment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // State & LocalStorage
+    let shipments = JSON.parse(localStorage.getItem('tv_shipments_data')) || [];
+    let currentFilter = 'active';
+
+    // Seed sample data if empty first time
+    if (shipments.length === 0) {
+      const today = new Date();
+      const formatYMD = (d) => d.toISOString().split('T')[0];
+      
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+
+      const nextWeek = new Date(today);
+      nextWeek.setDate(today.getDate() + 3);
+
+      shipments = [
+        {
+          id: '1',
+          vendor: 'Fastenal Industrial',
+          details: 'PO #49201 - Fasteners & Hardware',
+          carrier: 'UPS',
+          expectedDate: formatYMD(today),
+          status: 'AUTO'
+        },
+        {
+          id: '2',
+          vendor: 'McMaster-Carr',
+          details: 'PO #88310 - Steel Tubing & Fittings',
+          carrier: 'FedEx',
+          expectedDate: formatYMD(today),
+          status: 'AUTO'
+        },
+        {
+          id: '3',
+          vendor: 'Global Packaging Co.',
+          details: '4 Pallets Cardboard Boxes',
+          carrier: 'Freight',
+          expectedDate: formatYMD(yesterday),
+          status: 'AUTO'
+        },
+        {
+          id: '4',
+          vendor: 'Grainger Direct',
+          details: 'PO #90411 - Safety Supplies',
+          carrier: 'DHL',
+          expectedDate: formatYMD(tomorrow),
+          status: 'AUTO'
+        },
+        {
+          id: '5',
+          vendor: 'Schneider Electric',
+          details: 'PO #33120 - Electrical Panel Parts',
+          carrier: 'USPS',
+          expectedDate: formatYMD(nextWeek),
+          status: 'AUTO'
+        }
+      ];
+      saveToStorage();
+    }
+
+    function saveToStorage() {
+      localStorage.setItem('tv_shipments_data', JSON.stringify(shipments));
+    }
+
+    // CLOCK
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+      
+      document.getElementById('clockTime').textContent = timeStr;
+      document.getElementById('clockDate').textContent = dateStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // RENDER BOARD
+    function renderBoard() {
+      const tbody = document.getElementById('shipmentsTable');
+      tbody.innerHTML = '';
+
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      let countToday = 0;
+      let countOverdue = 0;
+      let countUpcoming = 0;
+      let countTotal = 0;
+
+      // Filter logic
+      const filtered = shipments.filter(item => {
+        const isArrived = item.status === 'ARRIVED';
+        const isOverdue = item.expectedDate < todayStr && !isArrived;
+        const isToday = item.expectedDate === todayStr && !isArrived;
+        const isUpcoming = item.expectedDate > todayStr && !isArrived;
+
+        if (!isArrived) countTotal++;
+        if (isToday) countToday++;
+        if (isOverdue) countOverdue++;
+        if (isUpcoming) countUpcoming++;
+
+        if (currentFilter === 'active') return !isArrived;
+        if (currentFilter === 'today') return isToday;
+        if (currentFilter === 'overdue') return isOverdue;
+        if (currentFilter === 'arrived') return isArrived;
+        return true;
+      });
+
+      // Update counters
+      document.getElementById('countToday').textContent = countToday;
+      document.getElementById('countOverdue').textContent = countOverdue;
+      document.getElementById('countUpcoming').textContent = countUpcoming;
+      document.getElementById('countTotal').textContent = countTotal;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                <i class="fa-solid fa-box-open"></i>
+                <p>No shipments found for this view.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      // Sort by date (ascending)
+      filtered.sort((a, b) => a.expectedDate.localeCompare(b.expectedDate));
+
+      filtered.forEach(item => {
+        const tr = document.createElement('tr');
+
+        // Date calculations
+        let statusBadge = '';
+        const isArrived = item.status === 'ARRIVED';
+        
+        if (isArrived) {
+          statusBadge = `<span class="status-pill pill-arrived"><i class="fa-solid fa-circle-check"></i> Arrived</span>`;
+        } else if (item.status === 'DELAYED') {
+          statusBadge = `<span class="status-pill pill-overdue"><i class="fa-solid fa-clock"></i> Delayed</span>`;
+        } else if (item.expectedDate < todayStr) {
+          statusBadge = `<span class="status-pill pill-overdue"><i class="fa-solid fa-circle-exclamation"></i> Overdue</span>`;
+        } else if (item.expectedDate === todayStr) {
+          statusBadge = `<span class="status-pill pill-today"><i class="fa-solid fa-truck-ramp-box"></i> Expecting Today</span>`;
+        } else {
+          // Calculate relative days
+          const diffDays = Math.ceil((new Date(item.expectedDate) - new Date(todayStr)) / (1000 * 60 * 60 * 24));
+          const label = diffDays === 1 ? 'Tomorrow' : `In ${diffDays} Days`;
+          statusBadge = `<span class="status-pill pill-upcoming"><i class="fa-solid fa-calendar"></i> ${label}</span>`;
+        }
+
+        // Carrier Badge Styling
+        const carrierLower = item.carrier.toLowerCase();
+        let carrierClass = 'carrier-freight';
+        let carrierIcon = 'fa-truck-flatbed';
+
+        if (carrierLower.includes('ups')) { carrierClass = 'carrier-ups'; carrierIcon = 'fa-box'; }
+        else if (carrierLower.includes('fedex')) { carrierClass = 'carrier-fedex'; carrierIcon = 'fa-plane'; }
+        else if (carrierLower.includes('dhl')) { carrierClass = 'carrier-dhl'; carrierIcon = 'fa-bolt'; }
+        else if (carrierLower.includes('usps')) { carrierClass = 'carrier-usps'; carrierIcon = 'fa-envelope'; }
+
+        // Date Display formatting
+        const dateObj = new Date(item.expectedDate + 'T00:00:00');
+        const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+
+        tr.innerHTML = `
+          <td>
+            <div class="vendor-name">${escapeHtml(item.vendor)}</div>
+            ${item.details ? `<div class="vendor-sub">${escapeHtml(item.details)}</div>` : ''}
+          </td>
+          <td>
+            <div class="carrier-badge ${carrierClass}">
+              <i class="fa-solid ${carrierIcon}"></i> ${escapeHtml(item.carrier)}
+            </div>
+          </td>
+          <td>
+            <div class="date-box">
+              <div class="date-main">${formattedDate}</div>
+              <div class="date-sub">${dayName.toUpperCase()}</div>
+            </div>
+          </td>
+          <td>${statusBadge}</td>
+          <td class="row-actions">
+            ${!isArrived ? `
+              <button class="icon-btn check" title="Mark Arrived" onclick="markArrived('${item.id}')">
+                <i class="fa-solid fa-check"></i>
+              </button>
+            ` : ''}
+            <button class="icon-btn" title="Edit" onclick="editShipment('${item.id}')">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button class="icon-btn delete" title="Delete" onclick="deleteShipment('${item.id}')">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    // MODAL & ACTIONS
+    function openModal(editId = null) {
+      document.getElementById('modalOverlay').classList.add('active');
+      const form = document.getElementById('shipmentForm');
+      form.reset();
+
+      if (editId) {
+        const item = shipments.find(s => s.id === editId);
+        if (item) {
+          document.getElementById('modalTitle').textContent = 'Edit Shipment';
+          document.getElementById('shipmentId').value = item.id;
+          document.getElementById('vendorInput').value = item.vendor;
+          document.getElementById('detailsInput').value = item.details || '';
+          document.getElementById('carrierInput').value = item.carrier;
+          document.getElementById('dateInput').value = item.expectedDate;
+          document.getElementById('statusInput').value = item.status || 'AUTO';
+        }
+      } else {
+        document.getElementById('modalTitle').textContent = 'Add Expected Shipment';
+        document.getElementById('shipmentId').value = '';
+        document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function saveShipment(e) {
+      e.preventDefault();
+      const id = document.getElementById('shipmentId').value;
+      const vendor = document.getElementById('vendorInput').value.trim();
+      const details = document.getElementById('detailsInput').value.trim();
+      const carrier = document.getElementById('carrierInput').value;
+      const expectedDate = document.getElementById('dateInput').value;
+      const status = document.getElementById('statusInput').value;
+
+      if (id) {
+        const idx = shipments.findIndex(s => s.id === id);
+        if (idx !== -1) {
+          shipments[idx] = { id, vendor, details, carrier, expectedDate, status };
+        }
+      } else {
+        const newShipment = {
+          id: Date.now().toString(),
+          vendor,
+          details,
+          carrier,
+          expectedDate,
+          status
+        };
+        shipments.push(newShipment);
+      }
+
+      saveToStorage();
+      renderBoard();
+      closeModal();
+    }
+
+    function markArrived(id) {
+      const item = shipments.find(s => s.id === id);
+      if (item) {
+        item.status = 'ARRIVED';
+        saveToStorage();
+        renderBoard();
+      }
+    }
+
+    function editShipment(id) {
+      openModal(id);
+    }
+
+    function deleteShipment(id) {
+      if (confirm('Delete this shipment entry?')) {
+        shipments = shipments.filter(s => s.id !== id);
+        saveToStorage();
+        renderBoard();
+      }
+    }
+
+    function setFilter(filter, btn) {
+      currentFilter = filter;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderBoard();
+    }
+
+    function toggleTVMode() {
+      document.body.classList.toggle('tv-mode');
+      if (document.body.classList.contains('tv-mode')) {
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Exit TV mode on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.body.classList.contains('tv-mode')) {
+        document.body.classList.remove('tv-mode');
+      }
+    });
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // Initial Render
+    renderBoard();
+  </script>
+</body>
+</html>
